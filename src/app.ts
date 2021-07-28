@@ -24,6 +24,7 @@ function appInit() {
     audience = process.env.AUDIENCE;
 
     credential = new identity.ManagedIdentityCredential(process.env.CLIENT_ID);
+    processAllApis();
     
     setInterval(processAllApis, freqInSecs * 1000 );
     logHelper.logger.info("Api info now running every %d seconds", freqInSecs);
