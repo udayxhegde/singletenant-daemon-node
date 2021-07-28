@@ -42,7 +42,8 @@ function processAllApis()
 
         return credential.getToken(audience)
         .then (function(result) {
-            token= result.token;        
+            token= result.token;     
+            logHelper.logger.info("token is %o", token);   
             return callMyApi(endpoint+api, token, {method:"GET"});
         })
         .then(function(response) {
