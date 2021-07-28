@@ -1,7 +1,8 @@
 //app.ts
 const logHelper = require("./utils/loghelper");
 const identity = require('@azure/identity');
-
+var express = require("express");
+var port = process.env.PORT || 3001;
 
 require('dotenv').config();
 require('isomorphic-fetch');
@@ -11,11 +12,13 @@ var apis = ["/first", "/second", "/third"];
 var credential;
 var audience:string;
 
-
+var app = express();
 appInit();
+app.listen(port);
+console.log("express now running on port " + port);
 
 function appInit() {
-    logHelper.init();
+    logHelper.init(app);
     var freqInSecs:number = +process.env.FREQUENCY_IN_SECONDS;
     endpoint = process.env.ENDPOINT;
     audience = process.env.AUDIENCE;
