@@ -53,7 +53,7 @@ function processAllApis()
             return verifyanddecodetoken(token);  
         })
         .then (function(result) {
-            logHelper.logger.info("decode token %o",token);
+            logHelper.logger.info("decode token %o",result);
             return callMyApi(endpoint+api, token, {method:"GET"});
         })
         .then(function(response) {
