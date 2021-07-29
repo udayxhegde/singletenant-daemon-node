@@ -2,6 +2,8 @@
 const logHelper = require("./utils/loghelper");
 const identity = require('@azure/identity');
 var express = require("express");
+var aad     = require('azure-ad-jwt');
+
 var port = process.env.PORT || 3001;
 
 require('dotenv').config();
@@ -47,7 +49,11 @@ function processAllApis()
         return credential.getToken(audience)
         .then (function(result) {
             token= result.token;     
-            logHelper.logger.info("token is %o", token);   
+            logHelper.logger.info("token is %o", token); 
+            return verifyanddecodetoken(token);  
+        })
+        .then (function(result) {
+            logHelper.logger.info("decode token %o",token);
             return callMyApi(endpoint+api, token, {method:"GET"});
         })
         .then(function(response) {
@@ -78,4 +84,20 @@ async function callMyApi(endpoint, token, payload)
     .then(function(response) {
         return response.json();
     })
+}
+
+
+async function verifyanddecodetoken(token) {
+
+    var jwtToken = token;
+
+    return new Promise(function(resolve, reject) {
+        aad.verify(jwtToken, {audience: audience}, function(error, result) {
+            if (result) {
+                resolve(result);
+            } else {
+                reject(error);
+            }
+        });
+    });
 }
